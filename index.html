@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoScrap — Propuesta Confidencial</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#080c07; --green:#0f3d1f; --lime:#c8f135; --lime2:#a8d120;
+  --white:#f2f0e8; --gray:#909888; --red:#e84030; --amber:#f0a820;
+  --card:#0e1a0c; --border:rgba(200,241,53,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--black);color:var(--white);min-height:100vh;}
+.page{max-width:820px;margin:0 auto;}
+
+/* TOP BAR */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;border-bottom:1px solid var(--border);background:rgba(8,12,7,0.97);position:sticky;top:0;z-index:100;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--lime);}
+.logo span{color:rgba(242,240,232,0.35);}
+.nav-dots{display:flex;gap:5px;align-items:center;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(200,241,53,0.18);cursor:pointer;border:none;transition:all 0.2s;}
+.dot.active{background:var(--lime);transform:scale(1.4);}
+.counter{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:var(--gray);}
+
+/* SLIDES */
+.slide{display:none;padding:40px 28px 32px;}
+.slide.active{display:block;animation:up 0.35s cubic-bezier(0.16,1,0.3,1) forwards;}
+@keyframes up{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+/* BOTTOM NAV */
+.botnav{display:flex;justify-content:space-between;align-items:center;padding:14px 28px;border-top:1px solid var(--border);background:rgba(8,12,7,0.97);position:sticky;bottom:0;}
+.nbtn{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);background:transparent;border:1px solid var(--border);padding:7px 18px;cursor:pointer;transition:all 0.2s;}
+.nbtn:hover{color:var(--lime);border-color:var(--lime);}
+.nbtn.nxt{background:var(--lime);color:var(--black);border-color:var(--lime);}
+.nbtn.nxt:hover{background:var(--lime2);}
+.slide-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:var(--gray);text-transform:uppercase;}
+
+/* TYPOGRAPHY */
+.kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--lime);margin-bottom:10px;}
+.headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(50px,9vw,84px);line-height:0.93;letter-spacing:1px;margin-bottom:18px;}
+.hl{color:var(--lime);}
+.dim{color:var(--gray);font-size:0.58em;}
+.body{font-size:14px;font-weight:300;line-height:1.8;color:var(--gray);}
+.body strong{color:var(--white);font-weight:500;}
+.lime-bar{width:40px;height:3px;background:var(--lime);margin-bottom:18px;}
+
+/* TOOLTIP — término con explicación */
+.term{border-bottom:1px dashed rgba(200,241,53,0.5);cursor:help;color:var(--white);position:relative;}
+.term .tip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;background:#1a2e18;border:1px solid var(--border);padding:8px 12px;font-size:11px;line-height:1.5;color:var(--gray);white-space:normal;min-width:200px;max-width:280px;z-index:200;font-style:normal;font-weight:400;}
+.term:hover .tip{display:block;}
+
+/* SOURCE LINKS */
+.src{display:inline-flex;align-items:center;gap:3px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--lime);opacity:0.55;text-decoration:none;border-bottom:1px solid rgba(200,241,53,0.2);transition:opacity 0.15s;vertical-align:middle;margin-left:4px;}
+.src:hover{opacity:1;}
+.src::before{content:"↗";font-size:9px;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);padding:20px 22px;margin-bottom:10px;}
+.card-green{background:var(--green);border-color:rgba(200,241,53,0.28);}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* TAGS */
+.tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;margin-bottom:8px;}
+.tl{background:var(--lime);color:var(--black);}
+.tr{background:var(--red);color:var(--white);}
+.ta{background:var(--amber);color:var(--black);}
+.tg{border:1px solid var(--border);color:var(--gray);}
+
+/* STAT ROW */
+.stats{display:flex;border:1px solid var(--border);margin:24px 0;}
+.stat{flex:1;padding:20px 16px;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5vw,52px);color:var(--lime);line-height:1;letter-spacing:1px;}
+.stat-l{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-top:3px;}
+
+/* URGENCY */
+.urgency{background:linear-gradient(90deg,var(--red),#b82818);padding:10px 22px;display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.pls{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.urgency p{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;}
+
+/* QUOTE */
+.quote{border-left:3px solid var(--lime);padding:14px 20px;margin:18px 0;font-size:16px;font-style:italic;font-weight:300;color:var(--white);line-height:1.7;}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);margin:20px 0;}
+.step{background:var(--card);padding:18px 12px;}
+.step-n{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--lime);line-height:1;margin-bottom:6px;}
+.step h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.step p{font-size:11px;color:var(--gray);line-height:1.5;}
+
+/* SPREAD */
+.spread{background:var(--green);border:1px solid rgba(200,241,53,0.28);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.sp{text-align:center;}
+.sp-n{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--lime);line-height:1;}
+.sp-l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);}
+.sp-arr{font-size:20px;color:rgba(200,241,53,0.2);}
+
+/* BARS */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bar-label{font-size:12px;color:var(--gray);width:20px;}
+.bar-track{flex:1;background:rgba(255,255,255,0.04);height:24px;}
+.bar-fill{height:100%;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:500;}
+.bn{background:rgba(240,168,32,0.2);color:var(--amber);width:12%;}
+.ba{background:rgba(200,241,53,0.12);color:var(--lime);width:22%;}
+.bb{background:rgba(200,241,53,0.3);color:var(--lime);width:52%;}
+.bc{background:rgba(200,241,53,0.6);color:var(--black);width:85%;}
+
+/* ROWS */
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.row:last-child{border-bottom:none;}
+.rl{color:var(--gray);}.rv{color:var(--white);font-weight:500;}
+
+/* COMP TABLE */
+.ctbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.ctbl th{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.ctbl td{padding:10px;border-bottom:1px solid rgba(200,241,53,0.05);}
+.ctbl tr.us td{background:rgba(200,241,53,0.05);}
+.cn{font-weight:500;color:var(--white);}.cc{font-size:10px;color:var(--gray);}
+.yes{color:var(--lime);font-size:15px;}.no{color:rgba(255,255,255,0.1);font-size:15px;}.maybe{color:var(--amber);}
+
+/* ROADMAP */
+.rm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rm{border:1px solid var(--border);}
+.rm-head{padding:18px 20px;border-bottom:1px solid var(--border);}
+.rmh1{background:var(--green);}.rmh2{background:#0a2615;}
+.rm-head h3{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:2px;}
+.rm-head p{font-size:11px;color:var(--gray);letter-spacing:1px;}
+.rm-body{background:var(--card);padding:18px 20px;}
+.rm-item{display:flex;gap:8px;margin-bottom:9px;}
+.rmdot{width:4px;height:4px;background:var(--lime);margin-top:6px;flex-shrink:0;}
+.rm-item p{font-size:12px;color:var(--gray);line-height:1.5;}
+.rm-item p strong{color:var(--white);font-weight:500;}
+.rm-kpi{display:flex;gap:0;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.rk{flex:1;text-align:center;border-right:1px solid var(--border);padding:0 6px;}
+.rk:last-child{border-right:none;}
+.rk-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--lime);}
+.rk-l{font-size:10px;color:var(--gray);letter-spacing:1px;}
+
+/* CTA */
+.cta{background:var(--lime);padding:32px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.cta h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,42px);color:var(--black);letter-spacing:1px;line-height:1;max-width:380px;}
+.cta-r p{font-size:13px;color:rgba(8,12,7,0.55);line-height:1.8;text-align:right;}
+.cta-r strong{color:var(--black);}
+
+/* SUM STRIP */
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:10px;}
+.sum-i{background:var(--green);padding:14px;text-align:center;}
+.sum-n{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--lime);}
+.sum-l{font-size:10px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:9px 0;margin-bottom:24px;}
+.ticker{display:flex;gap:40px;white-space:nowrap;animation:tick 22s linear infinite;}
+.ti{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gray);}
+.ti.hl{color:var(--lime);}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* GAINS */
+.gains{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.gain{padding:22px;border:1px solid var(--border);background:var(--card);}
+.gain.big{background:var(--green);border-color:rgba(200,241,53,0.28);}
+.gain-n{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--lime);line-height:1;margin-bottom:4px;}
+.gain h3{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:6px;}
+.gain p{font-size:13px;color:var(--gray);line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="topbar">
+  <div class="logo">ECO<span>SCRAP</span></div>
+  <div class="nav-dots" id="dots"></div>
+  <div class="counter" id="ctr">01 / 08</div>
+</div>
+
+<!-- S1: PORTADA -->
+<div class="slide active" id="s1">
+  <div class="ticker-wrap"><div class="ticker">
+    <span class="ti hl">Mercado sin digitalizar</span><span class="ti">·</span>
+    <span class="ti">520.000 ton RAEE/año Argentina</span><span class="ti">·</span>
+    <span class="ti hl">0 competidores con este modelo</span><span class="ti">·</span>
+    <span class="ti">Ley nacional en camino</span><span class="ti">·</span>
+    <span class="ti hl">47% margen neto proyectado</span><span class="ti">·</span>
+    <span class="ti">Break-even mes 6</span><span class="ti">·</span>
+    <span class="ti hl">Latam: 4.800M ton e-waste</span><span class="ti">·</span>
+    <span class="ti">Mercado sin digitalizar</span><span class="ti">·</span>
+    <span class="ti hl">0 competidores con este modelo</span><span class="ti">·</span>
+    <span class="ti">Ley nacional en camino</span><span class="ti">·</span>
+    <span class="ti hl">47% margen neto proyectado</span><span class="ti">·</span>
+    <span class="ti">Break-even mes 6</span><span class="ti">·</span>
+  </div></div>
+  <div class="kicker">Propuesta confidencial · 2025</div>
+  <div class="headline">HAY UN<br><span class="hl">MERCADO<br>ENORME.</span><br><span class="dim">Y nadie lo<br>digitalizó todavía.</span></div>
+  <div class="lime-bar"></div>
+  <p class="body" style="max-width:500px;margin-bottom:28px">
+    Retiramos equipos electrónicos en desuso de empresas, les pagamos por ellos, y los vendemos a
+    <span class="term">recuperadoras<span class="tip">Empresas industriales que procesan los equipos para extraer y reutilizar los materiales valiosos: cobre, oro, aluminio, litio.</span></span>
+    certificadas. Simple. Rentable. Sin competencia directa en toda Latinoamérica.<br><br>
+    <strong>Argentina es el punto de entrada. El mundo es el destino.</strong>
+  </p>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n">520K</div>
+      <div class="stat-l">Ton. <span class="term" style="font-size:inherit">RAEE<span class="tip">Residuos de Aparatos Eléctricos y Electrónicos. El término legal para "basura tecnológica": celulares, laptops, tablets, monitores.</span></span>/año en Argentina <a class="src" href="https://circulodepoliticasambientales.org/wp-content/uploads/2025/12/CPA-Observaciones-proyectos-de-ley-PPMM-de-gestion-de-RAEE.pdf" target="_blank">Fuente</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">6.4%</div>
+      <div class="stat-l">Crecimiento anual Latam <a class="src" href="https://www.imarcgroup.com/report/es/latin-america-e-waste-management-market" target="_blank">IMARC</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">62M</div>
+      <div class="stat-l">Ton. e-waste global 2022 <a class="src" href="https://ewastemonitor.info/wp-content/uploads/2024/12/GEM_2024_ES_11_NOV-web.pdf" target="_blank">ONU</a></div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">22%</div>
+      <div class="stat-l">Se recicla formalmente hoy <a class="src" href="https://ewastemonitor.info/wp-content/uploads/2024/12/GEM_2024_ES_11_NOV-web.pdf" target="_blank">ONU</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- S2: OPORTUNIDAD -->
+<div class="slide" id="s2">
+  <div class="urgency">
+    <div class="pls"></div>
+    <p>Hay una ley nacional de RAEE en el Senado ahora mismo — cuando se apruebe, este mercado se vuelve obligatorio</p>
+  </div>
+  <div class="kicker">La oportunidad</div>
+  <div class="headline">LA VENTANA<br><span class="hl">ESTÁ ABIERTA.</span></div>
+  <div class="lime-bar"></div>
+  <div class="quote">
+    "Argentina es el 5° país del continente en generación de <span class="term">RAEE<span class="tip">Residuos de Aparatos Eléctricos y Electrónicos — el término legal para e-waste o basura tecnológica.</span></span> — 520.000 ton/año — y uno de los pocos que aún no tiene ley nacional."
+    <a class="src" href="https://circulodepoliticasambientales.org/wp-content/uploads/2025/12/CPA-Observaciones-proyectos-de-ley-PPMM-de-gestion-de-RAEE.pdf" target="_blank">Círculo de Políticas Ambientales, 2024</a>
+  </div>
+  <div class="g3" style="margin-bottom:10px">
+    <div class="card">
+      <div class="tag tr">Problema legal</div>
+      <p class="body">La Ley 11.720 de Buenos Aires prohíbe tirar e-waste a la basura. Cualquier empresa que lo haga tiene exposición legal real. <a class="src" href="https://normas.gba.gob.ar/documentos/Bj7QDiyV.html" target="_blank">Ley 11.720</a></p>
+    </div>
+    <div class="card">
+      <div class="tag ta">Ley nacional en camino</div>
+      <p class="body">Tres proyectos con estado parlamentario en el Senado (Exp. 211/24, 675/23, 77/23). Cuando salga la ley, el cumplimiento se vuelve obligatorio para todas las empresas del país. <a class="src" href="https://circulodepoliticasambientales.org/wp-content/uploads/2025/12/CPA-Observaciones-proyectos-de-ley-PPMM-de-gestion-de-RAEE.pdf" target="_blank">Senado AR</a></p>
+    </div>
+    <div class="card">
+      <div class="tag tl">Sin competencia directa</div>
+      <p class="body">Nadie en Latam tiene: plataforma digital + foco en empresas corporativas + pago por equipos + borrado certificado de datos + certificado de reciclaje automático.</p>
+    </div>
+  </div>
+  <div class="card card-green">
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center">
+      <div><div class="stat-n">4.8M</div><div class="stat-l">Ton. mercado Latam 2024 <a class="src" href="https://www.imarcgroup.com/report/es/latin-america-e-waste-management-market" target="_blank">IMARC</a></div></div>
+      <div style="flex:1;min-width:200px"><p class="body">El mercado crece por regulación ambiental y presión <span class="term">ESG<span class="tip">Siglas de Environmental, Social and Governance (Ambiental, Social y Gobernanza). Son los estándares que usan inversores y casas matrices para medir si una empresa es responsable. Muchas multinacionales necesitan reportar cómo gestionan su basura tecnológica.</span></span> global. Latinoamérica genera 14 kg de e-waste por persona al año — más que Asia o África. <a class="src" href="https://www.revistaeyn.com/centroamericaymundo/residuos-electronicos-una-mina-urbana-de-us-91000-millones-LL28238614" target="_blank">Informe ONU</a></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: EL NEGOCIO -->
+<div class="slide" id="s3">
+  <div class="kicker">El modelo</div>
+  <div class="headline">COMPRAMOS<br><span class="hl">BARATO.</span><br>VENDEMOS BIEN.</div>
+  <div class="lime-bar"></div>
+  <p class="body" style="margin-bottom:20px">El negocio vive en la diferencia entre lo que pagamos a las empresas por sus equipos viejos y lo que nos pagan las recuperadoras por el lote consolidado. A eso le sumamos el valor del certificado legal y de borrado de datos, que ningún competidor ofrece junto.</p>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><h4>Empresa agenda</h4><p>App o teléfono. Cotización de sus equipos en el momento.</p></div>
+    <div class="step"><div class="step-n">02</div><h4>Retiramos</h4><p>Sin costo logístico para la empresa. Todo lo coordinamos nosotros.</p></div>
+    <div class="step"><div class="step-n">03</div><h4>Pagamos</h4><p>Transferencia en 72hs. USD 2–5 por equipo según tipo y marca.</p></div>
+    <div class="step"><div class="step-n">04</div><h4>Certificados</h4><p>Disposición legal + <span class="term" style="color:var(--white)">ESG<span class="tip">El documento que las empresas necesitan para demostrar a sus casas matrices o inversores que reciclaron sus equipos de forma responsable.</span></span> + borrado de datos. Automático.</p></div>
+    <div class="step"><div class="step-n">05</div><h4>Vendemos el lote</h4><p>A recuperadoras certificadas (Silkers, Puro Scrap). USD 8–15 por equipo.</p></div>
+  </div>
+  <div class="spread">
+    <div class="sp"><div class="sp-n">USD 3</div><div class="sp-l">Pagamos a empresa</div></div>
+    <div class="sp-arr">+</div>
+    <div class="sp"><div class="sp-n">USD 1.5</div><div class="sp-l">Costo logística</div></div>
+    <div class="sp-arr">→</div>
+    <div class="sp"><div class="sp-n">USD 10</div><div class="sp-l">Cobro a recuperadora</div></div>
+    <div class="sp-arr">=</div>
+    <div class="sp"><div class="sp-n" style="font-size:36px">USD 5.50</div><div class="sp-l">Ganancia neta / equipo</div></div>
+    <div class="sp-arr">×</div>
+    <div class="sp"><div class="sp-n">3.200</div><div class="sp-l">Equipos año 1</div></div>
+    <div class="sp-arr">=</div>
+    <div class="sp"><div class="sp-n" style="font-size:40px;color:#c8f135">USD 17.6K</div><div class="sp-l">Ganancia neta año 1</div></div>
+  </div>
+</div>
+
+<!-- S4: FINANCIERO -->
+<div class="slide" id="s4">
+  <div class="kicker">Proyección financiera</div>
+  <div class="headline">RENTABLE<br><span class="hl">MES 6.</span></div>
+  <div class="lime-bar"></div>
+  <div class="g2" style="margin-bottom:10px">
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:12px">Ganancia neta por trimestre</div>
+      <div class="bar-row"><span class="bar-label">T1</span><div class="bar-track"><div class="bar-fill bn">-USD 1.200</div></div></div>
+      <div class="bar-row"><span class="bar-label">T2</span><div class="bar-track"><div class="bar-fill ba">USD 2.800</div></div></div>
+      <div class="bar-row"><span class="bar-label">T3</span><div class="bar-track"><div class="bar-fill bb">USD 6.600</div></div></div>
+      <div class="bar-row"><span class="bar-label">T4</span><div class="bar-track"><div class="bar-fill bc">USD 10.000</div></div></div>
+    </div>
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:12px">Uso del capital inicial</div>
+      <div class="row"><span class="rl">Primeros pagos a empresas</span><span class="rv">USD 6.000</span></div>
+      <div class="row"><span class="rl">Logística primeros 3 meses</span><span class="rv">USD 4.500</span></div>
+      <div class="row"><span class="rl">Legal y habilitaciones</span><span class="rv">USD 2.500</span></div>
+      <div class="row"><span class="rl">Tecnología básica mes 1–6</span><span class="rv">USD 3.000</span></div>
+      <div class="row"><span class="rl">Reserva operativa</span><span class="rv">USD 4.000</span></div>
+      <div class="row"><span class="rl" style="color:var(--lime)">Total requerido</span><span class="rv" style="color:var(--lime)">USD 20.000</span></div>
+    </div>
+  </div>
+  <div class="sum">
+    <div class="sum-i"><div class="sum-n">3.200</div><div class="sum-l">Equipos año 1</div></div>
+    <div class="sum-i"><div class="sum-n">USD 38K</div><div class="sum-l">Ingreso bruto</div></div>
+    <div class="sum-i"><div class="sum-n">47%</div><div class="sum-l">Margen neto</div></div>
+    <div class="sum-i">
+      <div class="sum-n"><span class="term" style="color:var(--lime);font-family:'Bebas Neue',sans-serif;font-size:26px">Mes 6<span class="tip">Break-even: el punto en que los ingresos igualan los costos y el negocio empieza a ganar dinero real.</span></span></div>
+      <div class="sum-l">Break-even</div>
+    </div>
+  </div>
+  <div class="card card-green" style="margin-top:10px">
+    <p class="body">El primer trimestre arroja pérdida — es normal: el capital se usa para arrancar operaciones. A partir del mes 4, con las primeras empresas funcionando y el primer lote vendido a la recuperadora, el negocio empieza a sostenerse solo.</p>
+  </div>
+</div>
+
+<!-- S5: COMPETENCIA -->
+<div class="slide" id="s5">
+  <div class="kicker">Panorama competitivo</div>
+  <div class="headline">NADIE<br><span class="hl">TIENE ESTO.</span></div>
+  <div class="lime-bar"></div>
+  <p class="body" style="margin-bottom:16px">Investigamos el mercado completo de Latinoamérica. Hay jugadores en reciclaje general, pero ninguno tiene los cinco elementos juntos que diferencian este negocio.</p>
+  <table class="ctbl">
+    <thead><tr>
+      <th>Empresa</th>
+      <th>App digital</th>
+      <th>E-waste corporativo</th>
+      <th>Paga por equipos</th>
+      <th>Borrado de datos</th>
+      <th>Cert. reciclaje auto</th>
+    </tr></thead>
+    <tbody>
+      <tr class="us">
+        <td><div class="cn">EcoScrap ✦</div><div class="cc">Argentina — nuestro</div></td>
+        <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td>
+      </tr>
+      <tr>
+        <td><div class="cn">Muta</div><div class="cc">Colombia · 6 países — reciclaje general <a class="src" href="https://startupslatam.com/epic-angels-realiza-su-primera-inversion-en-latinoamerica-con-muta-la-startup-colombiana-que-transforma-el-reciclaje/" target="_blank">Fuente</a></div></td>
+        <td><span class="yes">✓</span></td><td><span class="maybe">~</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="maybe">~</span></td>
+      </tr>
+      <tr>
+        <td><div class="cn">Reaquila</div><div class="cc">Argentina · Latam — app para cartoneros <a class="src" href="https://economiasustentable.com/noticias/el-uber-del-reciclaje-la-app-argentina-que-transforma-la-basura-en-una-oportunidad" target="_blank">Fuente</a></div></td>
+        <td><span class="yes">✓</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td><div class="cn">Silkers / Puro Scrap</div><div class="cc">Argentina — recuperadoras físicas, sin plataforma <a class="src" href="https://www.escrap.com.ar" target="_blank">Escrap</a></div></td>
+        <td><span class="no">✗</span></td><td><span class="yes">✓</span></td><td><span class="no">✗</span></td><td><span class="maybe">~</span></td><td><span class="no">✗</span></td>
+      </tr>
+      <tr>
+        <td><div class="cn">Circular Waste</div><div class="cc">Chile — plataforma B2B residuos generales <a class="src" href="https://www.cwaste.cl" target="_blank">cwaste.cl</a></div></td>
+        <td><span class="yes">✓</span></td><td><span class="maybe">~</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="maybe">~</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card card-green">
+    <p class="body"><strong>Las recuperadoras son socios compradores, no competencia.</strong> Silkers y Puro Scrap nos van a comprar los lotes — no van a competir con nosotros por los clientes corporativos porque no tienen plataforma ni equipo comercial para eso.</p>
+  </div>
+</div>
+
+<!-- S6: POR QUÉ AHORA -->
+<div class="slide" id="s6">
+  <div class="kicker">Por qué ahora</div>
+  <div class="headline">LA LEY<br><span class="hl">YA ESTÁ<br>ESCRITA.</span></div>
+  <div class="lime-bar"></div>
+  <div class="g2" style="margin-bottom:10px">
+    <div class="card">
+      <div class="tag ta" style="margin-bottom:10px">En el Senado hoy</div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;margin-bottom:8px">Tres proyectos de ley activos</p>
+      <p class="body">Expedientes 211/24, 675/23 y 77/23. Cuando cualquiera de los tres se apruebe, todas las empresas del país van a necesitar obligatoriamente un operador habilitado para gestionar sus equipos. <a class="src" href="https://circulodepoliticasambientales.org/wp-content/uploads/2025/12/CPA-Observaciones-proyectos-de-ley-PPMM-de-gestion-de-RAEE.pdf" target="_blank">Ver análisis</a></p>
+    </div>
+    <div class="card">
+      <div class="tag tr" style="margin-bottom:10px">Ya es ilegal</div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;margin-bottom:8px">Ley 11.720 — Prov. Buenos Aires</p>
+      <p class="body">Prohíbe tirar e-waste como basura domiciliaria. Aplica a todas las empresas de la provincia. La mayoría no lo sabe y no cumple hoy. <a class="src" href="https://normas.gba.gob.ar/documentos/Bj7QDiyV.html" target="_blank">Ver ley</a></p>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <div class="tag tl" style="margin-bottom:10px">Ventaja de timing</div>
+      <p class="body">Quien esté posicionado cuando salga la ley gana el mercado por años. Construir la base de clientes ahora, antes de que sea obligatorio, es la única ventaja que no se puede comprar después.</p>
+    </div>
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:10px">Presión ESG global</div>
+      <p class="body">Las casas matrices de multinacionales ya exigen reportes de sustentabilidad con datos reales. Las filiales argentinas necesitan el certificado ahora, no cuando salga la ley.</p>
+    </div>
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:10px">Mercado sin liderar</div>
+      <p class="body">Ni Muta, ni Reaquila, ni ninguna recuperadora local tiene una propuesta de valor completa para empresas corporativas. El mercado espera a quien llegue primero.</p>
+    </div>
+  </div>
+</div>
+
+<!-- S7: ROADMAP -->
+<div class="slide" id="s7">
+  <div class="kicker">Plan de ejecución</div>
+  <div class="headline">24 MESES<br><span class="hl">AL LIDERAZGO.</span></div>
+  <div class="lime-bar"></div>
+  <div class="rm-grid" style="margin-bottom:10px">
+    <div class="rm">
+      <div class="rm-head rmh1">
+        <div class="tag tl">Etapa 1</div>
+        <h3>El negocio físico</h3>
+        <p>Meses 1–12 · Capital inicial: USD 20.000</p>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 1–2:</strong> Cerrar precio con Silkers o Puro Scrap. Primeras 3 empresas clientes.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 3–4:</strong> Primer lote vendido a recuperadora. 5 empresas activas. Primer <span class="term">break-even<span class="tip">El punto en que los ingresos cubren todos los costos y el negocio empieza a generar ganancias reales.</span></span>.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 5–8:</strong> 10 empresas. Sumar borrado certificado de datos. <span class="term">MVP<span class="tip">Minimum Viable Product — la primera versión funcional de la app, con lo mínimo necesario para que las empresas puedan agendar retiros y descargar sus certificados.</span></span> de la app.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 9–12:</strong> Flujo de caja positivo. Operación predecible. Datos reales del mercado en mano.</p></div>
+        <div class="rm-kpi">
+          <div class="rk"><div class="rk-n">10+</div><div class="rk-l">empresas</div></div>
+          <div class="rk"><div class="rk-n">USD 18K</div><div class="rk-l">ganancia</div></div>
+          <div class="rk"><div class="rk-n">Mes 6</div><div class="rk-l">break-even</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rm">
+      <div class="rm-head rmh2">
+        <div class="tag tg">Etapa 2</div>
+        <h3>La plataforma</h3>
+        <p>Meses 9–24 · Financiado con ingresos de etapa 1</p>
+      </div>
+      <div class="rm-body">
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 9–12:</strong> App completa para empresas. Cotización, retiro y certificado en un click.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 13–16:</strong> <span class="term">Marketplace<span class="tip">Plataforma digital donde las empresas pueden conectarse directamente con recuperadoras para vender sus equipos, con trazabilidad completa del proceso.</span></span> con recuperadoras en tiempo real. Dashboard de sustentabilidad automático.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 17–20:</strong> Segunda ciudad (Córdoba o Rosario). Modelo replicado y validado.</p></div>
+        <div class="rm-item"><div class="rmdot"></div><p><strong>Mes 21–24:</strong> Pitch a inversores con métricas reales. Expansión Chile y Colombia.</p></div>
+        <div class="rm-kpi">
+          <div class="rk"><div class="rk-n">3</div><div class="rk-l">ciudades</div></div>
+          <div class="rk"><div class="rk-n">50+</div><div class="rk-l">empresas</div></div>
+          <div class="rk"><div class="rk-n"><span class="term" style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--lime)">Serie A<span class="tip">Ronda de inversión formal de capital de riesgo. Es el siguiente paso después de demostrar que el negocio funciona y escala. Típicamente entre USD 1M y USD 5M para expansión regional.</span></span></div><div class="rk-l">objetivo año 2</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="urgency">
+    <div class="pls"></div>
+    <p>La ventana está abierta ahora. En 12 meses este mercado va a tener más jugadores.</p>
+  </div>
+</div>
+
+<!-- S8: CIERRE -->
+<div class="slide" id="s8">
+  <div class="kicker">Próximos pasos</div>
+  <div class="headline">TRES<br><span class="hl">REUNIONES.</span></div>
+  <div class="lime-bar"></div>
+  <div class="g2" style="margin-bottom:10px">
+    <div class="card">
+      <div class="tag tl" style="margin-bottom:10px">Esta semana</div>
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px">Reunión 1</p>
+      <p class="body">Conocernos y alinear expectativas. Si hay acuerdo, avanzamos a la semana siguiente.</p>
+    </div>
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:10px">Semana 2</div>
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px">Reunión 2</p>
+      <p class="body">Llamada con Silkers o Puro Scrap para cerrar precios reales de mercado. Con eso los números dejan de ser proyecciones y se vuelven contratos.</p>
+    </div>
+    <div class="card">
+      <div class="tag tg" style="margin-bottom:10px">Semana 3</div>
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px">Reunión 3</p>
+      <p class="body">Primera empresa cliente. Esa es la reunión que valida todo el modelo. El negocio arranca ahí.</p>
+    </div>
+    <div class="card" style="border-color:rgba(200,241,53,0.35)">
+      <div class="tag tl" style="margin-bottom:10px">Para arrancar</div>
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:6px">Lo que necesitamos</p>
+      <p class="body">Contactos en el área de IT, Sustentabilidad o Compras de al menos 3 empresas medianas o grandes. Con eso alcanza para el primer trimestre.</p>
+    </div>
+  </div>
+  <div class="cta">
+    <h2>¿SUMÁS? HAGÁMOSLO.</h2>
+    <div class="cta-r">
+      <p>Argentina primero.<br>Latam después.<br>El mundo es el destino.<br><br><strong>contacto@ecoscrap.com.ar</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="botnav">
+  <button class="nbtn" onclick="nav(-1)">← Anterior</button>
+  <div class="slide-label" id="lbl">Portada</div>
+  <button class="nbtn nxt" onclick="nav(1)">Siguiente →</button>
+</div>
+
+</div>
+<script>
+const names=['Portada','La oportunidad','El modelo','Proyección financiera','Competencia','Por qué ahora','Plan 24 meses','Próximos pasos'];
+let cur=1;const total=8;
+function buildDots(){
+  const c=document.getElementById('dots');
+  for(let i=1;i<=total;i++){
+    const b=document.createElement('button');
+    b.className='dot'+(i===1?' active':'');
+    b.title=names[i-1];b.onclick=()=>go(i);c.appendChild(b);
+  }
+}
+function go(n){
+  if(n<1||n>total)return;
+  document.getElementById('s'+cur).classList.remove('active');
+  document.querySelectorAll('.dot')[cur-1].classList.remove('active');
+  cur=n;
+  document.getElementById('s'+cur).classList.add('active');
+  document.querySelectorAll('.dot')[cur-1].classList.add('active');
+  document.getElementById('ctr').textContent=String(cur).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+  document.getElementById('lbl').textContent=names[cur-1];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nav(d){go(cur+d);}
+buildDots();
+</script>
+</body>
+</html>
